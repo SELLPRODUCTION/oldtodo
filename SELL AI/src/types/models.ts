@@ -157,6 +157,7 @@ export type MemoryEventType =
   | 'model-change'
   | 'knowledge'
   | 'repo-change'
+  | 'webhook'
   | 'error'
   | 'system';
 
@@ -275,10 +276,23 @@ export interface ContextConfig {
   chatHistoryTurns: number;
 }
 
+export type RuntimeMode = 'local' | 'server';
+
+export interface ServerConfig {
+  host: string;
+  port: number;
+  authToken: string;
+  corsOrigin: string;
+  githubWebhookSecret: string;
+  webhookUserId: string;
+}
+
 export interface SellAiConfig {
+  mode: RuntimeMode;
   repoPath: string;
   dataDir: string;
   ollama: OllamaConfig;
   indexer: IndexerConfig;
   context: ContextConfig;
+  server: ServerConfig;
 }

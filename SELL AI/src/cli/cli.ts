@@ -518,7 +518,7 @@ export class CLI {
         `питань ${questions.length} | знань ${knowledge.length} | змін моделі ${modelChanges.length}`
       );
       for (const event of day.events) {
-        if (['scan', 'question', 'knowledge', 'model-change', 'repo-change'].includes(event.type)) {
+        if (['scan', 'question', 'knowledge', 'model-change', 'repo-change', 'webhook'].includes(event.type)) {
           const time = formatDate(event.timestamp).split(' ')[1];
           this.print(`  ${time} [${event.type}] ${event.summary}`);
         }

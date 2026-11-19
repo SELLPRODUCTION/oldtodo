@@ -3,7 +3,8 @@ import * as path from 'path';
 import { SellAiConfig } from '../types/models';
 
 export const DEFAULT_CONFIG: SellAiConfig = {
-  repoPath: '../SELLDEV',
+  mode: 'local',
+  repoPath: '.',
   dataDir: '.sellai-data',
   ollama: {
     baseUrl: 'http://127.0.0.1:11434',
@@ -12,6 +13,14 @@ export const DEFAULT_CONFIG: SellAiConfig = {
     numCtx: 8192,
     maxTokens: 2048,
     timeoutMs: 300000,
+  },
+  server: {
+    host: '127.0.0.1',
+    port: 8787,
+    authToken: '',
+    corsOrigin: '*',
+    githubWebhookSecret: '',
+    webhookUserId: 'default',
   },
   indexer: {
     maxFileSizeKb: 512,
@@ -78,7 +87,20 @@ export function loadConfig(baseDir: string): SellAiConfig {
   if (process.env.SELLAI_MODEL) merged.ollama.model = process.env.SELLAI_MODEL;
   if (process.env.OLLAMA_HOST) merged.ollama.baseUrl = normalizeOllamaHost(process.env.OLLAMA_HOST);
   if (process.env.SELLAI_DATA_DIR) merged.dataDir = process.env.SELLAI_DATA_DIR;
+  if (process.env.SELLAI_MODE === 'local' || process.env.SELLAI_MODE === 'server') {
+    merged.mode = process.env.SELLAI_MODE;
+  }
+  if (process.env.SELLAI_HOST) merged.server.host = process.env.SELLAI_HOST;
+  if (process.env.SELLAI_PORT) {
+    const port = Number.parseInt(process.env.SELLAI_PORT, 10);
+    if (!Number.isNaN(port) && port > 0 && port < 65536) merged.server.port = port;
+  }
+  if (process.env.SELLAI_TOKEN) merged.server.authToken = process.env.SELLAI_TOKEN;
+  if (process.env.SELLAI_CORS_ORIGIN) merged.server.corsOrigin = process.env.SELLAI_CORS_ORIGIN;
+  if (process.env.SELLAI_GITHUB_SECRET) merged.server.githubWebhookSecret = process.env.SELLAI_GITHUB_SECRET;
+  if (process.env.SELLAI_WEBHOOK_USER) merged.server.webhookUserId = process.env.SELLAI_WEBHOOK_USER;
 
+  if (merged.mode !== 'local' && merged.mode !== 'server') merged.mode = 'local';
   merged.repoPath = path.resolve(baseDir, merged.repoPath);
   merged.dataDir = path.resolve(baseDir, merged.dataDir);
   merged.ollama.baseUrl = normalizeOllamaHost(merged.ollama.baseUrl);
