@@ -1,5 +1,5 @@
 {
-  "repoPath": "C:\\Users\\User\\Desktop\\SELLDEV",
+  "repoPath": "C:\\Users\\User\\Desktop\\megatodo",
   "dataDir": ".sellai-data",
   "ollama": {
     "baseUrl": "http://127.0.0.1:11434",
